@@ -1,5 +1,7 @@
 import fastify from 'fastify';
-import crypto from 'node:crypto';
+import { db } from './src/database/client.ts';
+import { courses } from './src/database/schema.ts';
+import { eq } from 'drizzle-orm';
 
 const server = fastify({
   logger: {
@@ -13,45 +15,43 @@ const server = fastify({
   }
 });
 
-const courses = [
-  { id: '1', name: 'Course 1' },
-  { id: '2', name: 'Course 2' },
-  { id: '3', name: 'Course 3' },
-]
+server.get('/courses', async (request, reply) => {
+  const result = await db.select().from(courses);
 
-server.get('/', (request, reply) => {
-  return reply.status(200).send('Hello World!');
+  return reply.send({ courses: result });
 })
 
-server.get('/users', (request, reply) => {
-  const users = [
-    {name: 'John', email: 'john@example.com'},
-    {name: 'Jane', email: 'jane@example.com'},
-  ]
-
-  return reply.status(200).send({ users })
-})
-
-server.get('/courses', (request, reply) => {
-  return reply.send({ courses })
-})
-
-server.get('/courses/:id', (request, reply) => {
+server.get('/courses/:id', async (request, reply) => {
   type  Params = {
     id: string
   }
 
   const params = request.params as Params
-
   const courseId = params.id
 
-  const course = courses.find(course => course.id === courseId)
+  const result = await db.select().from(courses).where(eq(courses.id, courseId));
 
-  if (!course) {
-    return reply.status(404).send({ message: 'Course not found' })
+  if (result.length > 0) {
+    return reply.send(result[0]);
+  }
+  
+  return reply.status(404).send({ message: 'Course not found' })
+})
+
+server.post('/courses', async (request, reply) => {
+  type Body = {
+    title: string,
+    description?: string
   }
 
-  return reply.send(course);
+  const { title, description } = request.body as Body;
+
+  const result = await db.insert(courses).values({ 
+    title, 
+    description 
+  }).returning();
+
+  return reply.status(201).send(result[0].id);
 })
 
 server.listen( { port: 3333 } ).then(() => {

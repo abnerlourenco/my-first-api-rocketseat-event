@@ -1,0 +1,14 @@
+services:
+  pg-desafio-api:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: desafio
+    ports:
+      - "5432:5432"
+#     volumes:
+#       - pg-desafio-api-data:/var/lib/postgresql/data
+
+# volumes:
+#   pg-desafio-api-data:
