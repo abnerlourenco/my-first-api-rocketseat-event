@@ -1,7 +1,16 @@
 import fastify from 'fastify';
-import { db } from './src/database/client.ts';
-import { courses } from './src/database/schema.ts';
-import { eq } from 'drizzle-orm';
+import {
+  validatorCompiler,
+  serializerCompiler,
+  type ZodTypeProvider,
+  jsonSchemaTransform
+} from 'fastify-type-provider-zod';
+
+import fastifySwagger from '@fastify/swagger';
+import { createCourseRoute } from './src/routes/create-course.ts';
+import { getCourseByIdRoute } from './src/routes/get-course-by-id.ts';
+import { getCoursesRoute } from './src/routes/get-courses.ts';
+import scalarAPIReference from '@scalar/fastify-api-reference'
 
 const server = fastify({
   logger: {
@@ -13,46 +22,35 @@ const server = fastify({
       }
     }
   }
-});
+}).withTypeProvider<ZodTypeProvider>()
 
-server.get('/courses', async (request, reply) => {
-  const result = await db.select().from(courses);
-
-  return reply.send({ courses: result });
-})
-
-server.get('/courses/:id', async (request, reply) => {
-  type  Params = {
-    id: string
-  }
-
-  const params = request.params as Params
-  const courseId = params.id
-
-  const result = await db.select().from(courses).where(eq(courses.id, courseId));
-
-  if (result.length > 0) {
-    return reply.send(result[0]);
-  }
+if (process.env.NODE_ENV === 'development') {
+  server.register(fastifySwagger, {
+    openapi: {
+      info: {
+        title: 'Desafio Node.js - My First API',
+        description: 'API criada no evento My First API da Rocketseat',
+        version: '1.0.0'
+      }
+    },
+    transform: jsonSchemaTransform,
+  })
   
-  return reply.status(404).send({ message: 'Course not found' })
-})
+  server.register(scalarAPIReference, {
+    routePrefix: '/docs',
+    configuration: {
+      theme: 'deepSpace'
+    }
+  });
+}
 
-server.post('/courses', async (request, reply) => {
-  type Body = {
-    title: string,
-    description?: string
-  }
 
-  const { title, description } = request.body as Body;
+server.setValidatorCompiler(validatorCompiler);
+server.setSerializerCompiler(serializerCompiler);
 
-  const result = await db.insert(courses).values({ 
-    title, 
-    description 
-  }).returning();
-
-  return reply.status(201).send(result[0].id);
-})
+server.register(createCourseRoute);
+server.register(getCourseByIdRoute);
+server.register(getCoursesRoute);
 
 server.listen( { port: 3333 } ).then(() => {
   console.log('Server is running in port:3333');
