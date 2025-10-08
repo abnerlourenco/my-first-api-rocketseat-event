@@ -6,10 +6,13 @@
   "node": "22",
   "type": "module",
   "scripts": {
-    "dev": "node --env-file .env --watch --experimental-strip-types server.ts",
-    "db:generate": "npx drizzle-kit generate",
-    "db:migrate": "npx drizzle-kit migrate",
-    "db:studio": "npx drizzle-kit studio"
+    "dev": "node --env-file .env --watch --experimental-strip-types src/server.ts",
+    "db:seed": "node --env-file .env --experimental-strip-types src/database/seed.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "pretest": "dotenv -e .env.test drizzle-kit migrate",
+    "test": "dotenv -e .env.test vitest run --coverage"
   },
   "keywords": [],
   "author": "",
@@ -25,9 +28,15 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.0.0",
     "@types/node": "^24.5.2",
+    "@types/supertest": "^6.0.3",
+    "@vitest/coverage-v8": "^3.2.4",
+    "dotenv-cli": "^10.0.0",
     "drizzle-kit": "^0.31.5",
+    "supertest": "^7.1.4",
     "tsx": "^4.20.5",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   }
 }

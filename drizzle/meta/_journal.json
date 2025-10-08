@@ -15,6 +15,34 @@
       "when": 1758999854482,
       "tag": "0001_stiff_sunfire",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759514460155,
+      "tag": "0002_lively_karnak",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1759514559390,
+      "tag": "0003_many_bromley",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1759746693819,
+      "tag": "0004_fancy_mephistopheles",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1759772663087,
+      "tag": "0005_even_nocturne",
+      "breakpoints": true
     }
   ]
 }
