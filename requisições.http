@@ -5,7 +5,27 @@ Content-Type: application/json
     "title": "Curso de Cobol"
 }
 
-
 ###
 
 GET http://localhost:3333/courses
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZGM0YTFkZC1kZDk2LTRmODktOWRhYy0yMGJiMmY0MjYxNjgiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc2MDA0MDYzMn0.dJs5VUeGqKRYgLCWEB2yDJv6HG6lpZ67e8pJDVULnHE
+
+###
+
+POST http://localhost:3333/sessions
+Content-Type: application/json
+
+{
+    "email": "Murilo2@yahoo.com",
+    "password": "1234567"
+}
+
+###
+
+POST http://localhost:3333/enrollments
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2YzMwOGI2MC05YWU1LTQxYzktYmE5ZC00MThjYjJmZDkzYzIiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc2MDIxMzk4OH0.j3dQxFSAwOg57oupOrehThy_W6IWPnzrpP1uqLHlxNg
+
+{
+    "courseId": "711db1b8-8f27-4306-bc1f-2b6164bbd40e"
+}

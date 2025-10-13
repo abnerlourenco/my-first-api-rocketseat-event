@@ -4,21 +4,22 @@ import { server } from '../app.ts';
 import { makeCourse } from '../tests/factories/make-course.ts';
 import { randomUUID } from 'node:crypto';
 import { makeEnrollments } from '../tests/factories/make-enrollments.ts';
-import { makeUser } from '../tests/factories/make-user.ts';
+import { makeAutheticatedUser } from '../tests/factories/make-user.ts';
 
 test('get courses', async () => {
   await server.ready();
 
   const titleId = randomUUID();
+
+  const { token, user } = await makeAutheticatedUser('manager');
   
   const course = await makeCourse(titleId);
-  const user = await makeUser();
   
   await makeEnrollments( user.id , course.id );
   
-
   const response = await request(server.server)
     .get(`/courses?search=${titleId}`)
+    .set('Authorization', token )
 
     expect(response.status).toEqual(200)
     expect(response.body).toEqual({
@@ -32,4 +33,16 @@ test('get courses', async () => {
       ],
       total: 1,
     })
+})
+
+test('status 401 if user not manager', async () => {
+  await server.ready();
+
+  const { token } = await makeAutheticatedUser('student')
+
+  const response = await request(server.server)
+    .get(`/courses`)
+    .set('Autorization', token )
+
+    expect(response.status).toEqual(401)
 })
