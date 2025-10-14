@@ -4,14 +4,8 @@ WORKDIR /app
 
 COPY . ./
 
-RUN npm ci --only=production
-
-###
-
-FROM builder AS runner
-
-WORKDIR /app
+RUN npm ci --omit=production
 
 EXPOSE 3333
 
-CMD [ "node", "src/server.ts" ]
+CMD [ "node", "--experimental-strip-types", "src/server.ts" ]
