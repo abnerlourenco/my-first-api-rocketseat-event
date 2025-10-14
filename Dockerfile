@@ -14,7 +14,4 @@ WORKDIR /app
 
 EXPOSE 3333
 
-ENV PORT=3333
-ENV HOSTNAME="0.0.0.0"
-
-ENTRYPOINT [ "npm", "run", "start"]
+CMD [ "node", "src/server.ts" ]
