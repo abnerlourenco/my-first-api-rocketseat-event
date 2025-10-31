@@ -20,14 +20,14 @@ The API is JWT-protected. Some routes require specific roles.
 
 ```mermaid
 flowchart TD
-  A[Client] -->|POST /sessions\n(anonymous)| B[Login → 200 { token }\n400 { message }]
+  A[Client] -->|POST /sessions<br/>anonymous| B[Login<br/>200: token<br/>400: message]
 
-  A -->|POST /enrollments\n(JWT: any user)| C[Create Enrollment → 201 { enrollmentId }\n400 Already enrolled]
+  A -->|POST /enrollments<br/>JWT: any user| C[Create Enrollment<br/>201: enrollmentId<br/>400: Already enrolled]
 
-  A -->|GET /courses\n(JWT: role=manager)| D[List Courses → 200 { courses, total }]
-  A -->|POST /courses\n(JWT: role=manager)| E[Create Course → 201 { courseId }]
+  A -->|GET /courses<br/>JWT: role=manager| D[List Courses<br/>200: courses, total]
+  A -->|POST /courses<br/>JWT: role=manager| E[Create Course<br/>201: courseId]
 
-  A -->|GET /courses/:id\n(JWT: role=student)| F[Get Course → 200 { course }\n404 Not found]
+  A -->|GET /courses/:id<br/>JWT: role=student| F[Get Course<br/>200: course<br/>404: Not found]
 ```
 
 
