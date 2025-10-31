@@ -47,17 +47,13 @@ Prerequisites: Node.js 22+, Docker (optional), PostgreSQL instance.
 - npm install
 
 2) Configure environment
-- cp .example.env .env
-- Set DATABASE_URL and JWT_SECRET. Example for the included docker-compose:
-  - DATABASE_URL=postgres://admin:admin@localhost:5432/desafio
 
 3) Start PostgreSQL via Docker (optional)
 - docker compose up -d
 
-4) Run migrations and seed (optional but helpful)
+4) Run migrations and seed
 - npm run db:migrate
 - npm run db:seed
-  - Seeds create student users with password 1234567 and random emails.
 
 5) Start the API (dev)
 - npm run dev
@@ -74,58 +70,6 @@ Prerequisites: Node.js 22+, Docker (optional), PostgreSQL instance.
 - npm run db:generate → Generate Drizzle SQL from schema
 - npm run db:seed → Seed database with sample data
 - docker compose up -d → Start local PostgreSQL
-
-
-## 🧪 Try It (curl)
-Login and grab the token:
-
-- curl -X POST \
-  -H "Content-Type: application/json" \
-  -d '{"email":"YOUR_EMAIL","password":"1234567"}' \
-  https://my-first-api-rocketseat-event.fly.dev/sessions
-
-Use the token on protected routes:
-
-- export TOKEN=your.jwt.token
-
-Create enrollment (any authenticated user):
-
-- curl -X POST \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"courseId":"<uuid>"}' \
-  https://my-first-api-rocketseat-event.fly.dev/enrollments
-
-List courses (role=manager):
-
-- curl -H "Authorization: Bearer $TOKEN" \
-  "https://my-first-api-rocketseat-event.fly.dev/courses?search=&orderBy=title&page=1"
-
-Create course (role=manager):
-
-- curl -X POST \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Node.js Basics","description":"Intro to Node"}' \
-  https://my-first-api-rocketseat-event.fly.dev/courses
-
-Get course by id (role=student):
-
-- curl -H "Authorization: Bearer $TOKEN" \
-  https://my-first-api-rocketseat-event.fly.dev/courses/<uuid>
-
-
-## 👩‍🏫 Making a Manager (for local testing)
-The seed creates only students. To promote a user to manager, run in your database:
-
-- UPDATE users SET role = 'manager' WHERE email = 'user@example.com';
-
-Then log in with that email and use the returned token to access manager routes.
-
-
-## 📦 Project Hints
-- Development-only docs are served via /docs with a custom theme.
-- There is a requisições.http file for REST Client users (VS Code) to try requests.
 
 
 ## 🎯 Mission
